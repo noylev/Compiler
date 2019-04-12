@@ -1,0 +1,48 @@
+(load "HW3/compilerHW3.scm")
+
+
+(define compiler-scheme-file
+  (lambda (scheme-file c-file)
+    (let ((file-string (file->string scheme-file)))
+      (get-from-strings-sexprs file-string)
+      )))
+
+(define get-from-strings-sexprs
+  (lambda (file-string )
+   (string->symbol file-string)
+    ))
+
+;(define (slist->string slst)
+  ;(cond ((empty? slst) "")
+    ;    ((empty? (rest slst)) (symbol->string (first slst)))
+   ;     (else (string-append (symbol->string (first slst))
+  ;                           " "
+ ;                            (slist->string (rest slst))))))
+
+;(define get-from-strings-sexpr
+  ;(lambda (file-string)
+    
+     ;(cond ((not (non-empty-string? file-string)) '())
+       ';    ((not (non-empty-string? (extract-from-string-word file-string))) )
+
+(define file->string
+  (lambda (in-file)
+    (let ((in-port (open-input-file in-file)))
+      (letrec ((run
+                (lambda ()
+                  (let ((ch (read-char in-port)))
+                    (if (eof-object? ch)
+                        (begin
+                          (close-input-port in-port)
+                          '())
+                        (cons ch (run)))))))
+        (list->string
+         (run))))))
+         
+         
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+;                                                   TESTS
+
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
