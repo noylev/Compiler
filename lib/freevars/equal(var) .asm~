@@ -1,0 +1,31 @@
+JUMP(L_Plus_Clos);
+L_Plus_Body:
+	PUSH(FP);
+	MOV(FP,SP);
+	MOV(R0,IMM(SOB_TRUE)); //the neutral is ZERO
+	MOV(R2,FPARG(1)); //number of arguments to R2
+	ADD(R2,IMM(2));
+	MOV(R1,IMM(2)); //iterator on arguments to R1
+L_Plus_Body_loop:          
+	
+	CMP(R1,R2);
+	JUMP_EQ(L_Plus_Body_loop_exit);
+	CMP(FPARG(2),FPARG(R1));
+	JUMP_EQ(L_Plus_Body_loop_mid);
+	MOV(R0,SOB_FALSE);
+	JUMP(L_Plus_Body_loop_exit);
+	L_Plus_Body_loop_mid
+	INCR(R1);
+	JUMP(L_Plus_Body_loop);   
+L_Plus_Body_loop_exit:
+
+	POP(FP);
+	RETURN;
+
+L_Plus_Clos:
+    PUSH(3);
+    CALL(MALLOC);
+    DROP(1);
+    MOV(INDD(R0,0),IMM(T_CLOSURE));
+    MOV(INDD(R0,1),IMM(011110));
+    MOV(INDD(R0,2),LABEL(L_Plus_Body));
