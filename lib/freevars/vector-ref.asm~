@@ -1,0 +1,30 @@
+JUMP(L_String_Ref_Clos);
+L_String_Ref_Body:
+	PUSH(FP);
+	MOV(FP,SP);
+	CMP(FPARG(1),IMM(2));
+	JUMP_NE(L_String_Ref_Body_ERROR);
+	CMP(IND(FPARG(2)),T_STRING);
+	JUMP_NE(L_String_Ref_Body_ERROR);
+	CMP(IND(FPARG(3)),T_INTEGER);
+	JUMP_NE(L_String_Ref_Body_ERROR);
+	CMP(INDD(FPARG(3),1),INDD(FPARG(2),1));
+	JUMP_GE(L_String_Ref_Body_ERROR);
+	MOV(R1,INDD(FPARG(3),1));
+	ADD(R1,IMM(2));
+	MOV(R0,INDD(FPARG(2),R1));
+	PUSH(R0);
+	CALL(MAKE_SOB_CHAR);
+	DROP(2);
+	RETURN;
+L_String_Ref_Body_ERROR:
+	INFO;
+ 	SHOW("ERRRO!, String_Ref didn't get two arguments", FPARG(1));
+
+L_String_Ref_Clos:
+    PUSH(3);
+    CALL(MALLOC);
+    DROP(1);
+    MOV(INDD(R0,0),IMM(T_CLOSURE));
+    MOV(INDD(R0,1),IMM(011110));
+    MOV(INDD(R0,2),LABEL(L_String_Ref_Body));

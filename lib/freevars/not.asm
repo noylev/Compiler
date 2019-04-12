@@ -1,0 +1,32 @@
+JUMP(L_not_Clos);
+L_not_Body:
+	PUSH(FP);
+	MOV(FP,SP);
+
+	CMP(FPARG(1),IMM(1));
+	JUMP_NE(L_String_Ref_Body_ERROR);
+
+	CMP(FPARG(2),SOB_FALSE);
+	JUMP_NE(L_NOT_EXIT_RET_FALSE);
+
+	MOV(R0,SOB_TRUE);
+	JUMP(L_NOT_EXIT);
+
+	L_NOT_EXIT_RET_FALSE:
+	MOV(R0,SOB_FALSE);
+
+	L_NOT_EXIT:
+        POP(FP)
+	RETURN;
+L_NOT_ERROR:
+	INFO;
+ 	SHOW("ERRRO!, NOT didn't get ONE arguments", FPARG(1));
+exit(-1);
+
+L_not_Clos:
+    PUSH(4);
+    CALL(MALLOC);
+    DROP(1);
+    MOV(INDD(R0,1),IMM(T_CLOSURE));
+    MOV(INDD(R0,2),IMM(011110));
+    MOV(INDD(R0,3),LABEL(L_not_Body));

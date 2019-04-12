@@ -1,0 +1,28 @@
+JUMP(LZeroClos);
+LZeroBody:
+  PUSH(FP);
+  MOV(FP, SP);
+
+  CMP(FPARG(1), IMM(1));
+  JUMP_NE(L_error_inChar_not_1_item_dmh);
+
+  MOV(R0, FPARG(2));
+  CMP(INDD(R0,0), T_INTEGER);
+  JUMP_NE(L_IS_SOB_ZERO_FALSE2);
+  CMP(INDD(R0,1), IMM(0));
+  JUMP_NE(L_IS_SOB_ZERO_FALSE2);
+  MOV(R0, SOB_TRUE);
+  JUMP(L_IS_SOB_ZERO_EXIT2);
+  L_IS_SOB_ZERO_FALSE2:
+  MOV(R0, SOB_FALSE);
+  L_IS_SOB_ZERO_EXIT2:
+  POP(FP);
+  RETURN;
+    
+LZeroClos:
+    PUSH(4);
+    CALL(MALLOC);
+    DROP(1);
+    MOV(INDD(R0,1),IMM(T_CLOSURE));
+    MOV(INDD(R0,2),IMM(022230));
+    MOV(INDD(R0,3),LABEL(LZeroBody));

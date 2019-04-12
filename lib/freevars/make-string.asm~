@@ -1,0 +1,34 @@
+JUMP(L_List_Clos);
+L_List_Body:
+	PUSH(FP);
+	MOV(FP,SP);
+	MOV(R2,FPARG(1)); //number of arguments to R2
+	CMP(R2,IMM(2));
+	JUMP_EQ(L_List_Body_ERROR)
+	MOV(R1,FPARG(3)); //iterator on arguments to R1
+	MOV(R3,INN(FPARG(2),1)); //CHAR to push
+L_List_Body_loop:          
+	
+	CMP(R1,IMM(0));
+	JUMP_EQ(L_List_Body_loop_exit);
+        PUSH(R3);
+	DECR(R1);
+	JUMP(L_List_Body_loop);   
+L_List_Body_loop_exit:
+	PUSH(FPARG(3));
+	CALL(MAKE_SOB_STRING);
+	DROP(1);
+	DROP(FPARG(3));
+	POP(FP);
+	RETURN;
+L_List_Body_ERROR:
+	INFO;
+ 	SHOW("ERRRO!, didn't get two arguments", FPARG(1));
+
+L_List_Clos:
+    PUSH(3);
+    CALL(MALLOC);
+    DROP(1);
+    MOV(INDD(R0,0),IMM(T_CLOSURE));
+    MOV(INDD(R0,1),IMM(011110));
+    MOV(INDD(R0,2),LABEL(L_List_Body));

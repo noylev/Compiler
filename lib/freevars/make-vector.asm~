@@ -1,0 +1,36 @@
+JUMP(L_Make_String_Clos);
+L_Make_String_Body:
+	PUSH(FP);
+	MOV(FP,SP);
+
+	CMP(FPARG(1),IMM(2));
+	JUMP_NE(L_Make_String_Body_ERROR);
+
+	MOV(R1,INDD(FPARG(2),1)); //iterator on arguments to R1
+	MOV(R3,FPARG(3)); //CHAR to push
+L_Make_String_Body_loop:      
+
+	CMP(R1,IMM(0));
+	JUMP_EQ(L_Make_String_Body_loop_exit);
+        PUSH(R3);
+	DECR(R1);
+	JUMP(L_Make_String_Body_loop);   
+L_Make_String_Body_loop_exit:
+	PUSH(INDD(FPARG(2),1));
+	CALL(MAKE_SOB_STRING);
+	DROP(1);
+	DROP(INDD(FPARG(2),1));
+L_Make_String_Body_exit:
+	POP(FP);
+	RETURN;
+L_Make_String_Body_ERROR:
+	INFO;
+ 	SHOW("ERRRO!, didn't get two arguments", FPARG(1));
+
+L_Make_String_Clos:
+    PUSH(3);
+    CALL(MALLOC);
+    DROP(1);
+    MOV(INDD(R0,0),IMM(T_CLOSURE));
+    MOV(INDD(R0,1),IMM(011110));
+    MOV(INDD(R0,2),LABEL(L_Make_String_Body));
